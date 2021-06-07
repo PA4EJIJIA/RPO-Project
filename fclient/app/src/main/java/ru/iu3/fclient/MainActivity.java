@@ -2,6 +2,7 @@ package ru.iu3.fclient;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -10,6 +11,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.io.IOUtils;
+
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,14 +32,27 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Button btn = findViewById(R.id.btnClickMe);
         btn.setOnClickListener(this::onButtonClick);
 
-        //byte[] rnd = randomBytes(16);
+
+        int res = initRng();
+        Log.i("fclient", "Init Rng = " + res);
+        byte[] v = randomBytes(10);
+
+
+        /*byte[] rnd = randomBytes(16);
+        byte[] data = {1,2,3,4,5,6,7,8};
+        byte[] encText = encrypt(rnd, data);
+        byte[] decText = decrypt(rnd, encText);*/
+
+
 
         // Example of a call to a native method
         /*TextView tv = findViewById(R.id.sample_text);
         tv.setText(stringFromJNI());*/
+
     }
 
     public static byte[] StringToHex(String s)
@@ -66,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         Intent it = new Intent(this, PinpadActivity.class);
         //noinspection deprecation
         startActivityForResult(it, 0);
-        //TestHttpClient();
+        TestHttpClient();
     }
 
     @Override
@@ -83,6 +104,42 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         }
+    }
+
+    protected void TestHttpClient()
+    {
+        new Thread(()->{
+            try {
+                HttpURLConnection uc = (HttpURLConnection) (new URL("http://10.0.2.2:8081/api/v1/title").openConnection());
+                InputStream inputStream = uc.getInputStream();
+                String html = IOUtils.toString(inputStream);
+                String title = getPageTitle(html);
+                runOnUiThread(()-> Toast.makeText(this, title, Toast.LENGTH_SHORT).show());
+            } catch (Exception ex) {
+                Log.e("fapptag", "Http client fails", ex);
+            }
+        }).start();
+    }
+
+    protected String getPageTitle(String html)
+    {
+        Pattern pattern = Pattern.compile("<title>(.+?)</title>", Pattern.DOTALL);
+        Matcher matcher = pattern.matcher(html);
+        String p;
+        if (matcher.find())
+            p = matcher.group(1);
+        else
+            p = "Not found";
+        return p;
+        /*int pos = html.indexOf("<title");
+        String p = "not found";
+        if (pos >= 0)
+        {
+            int pos2 = html.indexOf("<", pos + 1);
+            if (pos >= 0)
+                p = html.substring(pos + 7, pos2);
+        }
+        return p;*/
     }
 
     /**
