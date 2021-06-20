@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
         Button btn = findViewById(R.id.btnClickMe);
         btn.setOnClickListener(this::onButtonClick);
-
+        stringFromJNI();
 
         int res = initRng();
         Log.i("fclient", "Init Rng = " + res);
@@ -148,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
      */
     //public native String stringFromJNI();
     public static native int initRng();
+    public native String stringFromJNI();
     public static native byte[] randomBytes(int no);
     public static native byte[] encrypt(byte[] key, byte[] data);
     public static native byte[] decrypt(byte[] key, byte[] data);
