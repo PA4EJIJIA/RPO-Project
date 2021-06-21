@@ -3,6 +3,7 @@ package ru.iu3.rpo.backend.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import javax.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import ru.iu3.rpo.backend.models.Artist;
@@ -10,12 +11,10 @@ import ru.iu3.rpo.backend.models.Country;
 import ru.iu3.rpo.backend.repositories.ArtistRepository;
 import ru.iu3.rpo.backend.repositories.CountryRepository;
 
-import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 @RestController
 @RequestMapping("/api/v1")
 public class ArtistController {
@@ -30,13 +29,13 @@ public class ArtistController {
 
     @PostMapping("/artists")
     public ResponseEntity<Object> createArtist(@Valid @RequestBody Artist artist){
-       Optional<Country> cc = countryRepository.findById(artist.country.id);
-       if (cc.isPresent())
-       {
-           artist.country = cc.get();
-       }
+        Optional<Country> cc = countryRepository.findById(artist.country.id);
+        if (cc.isPresent())
+        {
+            artist.country = cc.get();
+        }
         Artist nc = artistRepository.save(artist);
-        return new ResponseEntity<>(nc, HttpStatus.OK);
+        return new ResponseEntity<Object>(nc, HttpStatus.OK);
     }
 
     @PutMapping("/artists/{id}")

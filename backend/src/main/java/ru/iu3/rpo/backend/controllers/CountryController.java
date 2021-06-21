@@ -30,14 +30,14 @@ public class CountryController {
         {
             return ResponseEntity.ok(cc.get().artists);
         }
-        return ResponseEntity.ok(new ArrayList<>());
+        return ResponseEntity.ok(new ArrayList<Artist>());
     }
 
     @PostMapping("/countries")
     public ResponseEntity<Object> createCountry(@Valid @RequestBody Country country){
         try {
             Country nc = countryRepository.save(country);
-            return new ResponseEntity<>(nc, HttpStatus.OK);
+            return new ResponseEntity<Object>(nc, HttpStatus.OK);
         }
         catch (Exception ex)
         {
