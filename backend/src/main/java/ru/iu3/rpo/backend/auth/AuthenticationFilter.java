@@ -1,7 +1,8 @@
 package ru.iu3.rpo.backend.auth;
 
-
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -11,15 +12,14 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.util.Enumeration;
 
-
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+
 
 public class AuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
@@ -40,9 +40,10 @@ public class AuthenticationFilter extends AbstractAuthenticationProcessingFilter
 
     @Override
     protected void successfulAuthentication(final HttpServletRequest request, final HttpServletResponse response,
-                                            final FilterChain chain, final Authentication authResult) throws IOException, ServletException {
+                                            final FilterChain chain, final Authentication authResult)
+            throws IOException, ServletException {
         SecurityContextHolder.getContext().setAuthentication(authResult);
         chain.doFilter(request, response);
     }
-
 }
+

@@ -29,6 +29,12 @@ public class UserController {
     UserRepository userRepository;
     @Autowired
     MuseumRepository museumRepository;
+    @Autowired
+    MuseumRepository paintingRepository;
+    @Autowired
+    MuseumRepository countryRepository;
+    @Autowired
+    MuseumRepository artistRepository;
 
     @GetMapping("/users")
     public Page<User> getAllUsers(@RequestParam("page") int page, @RequestParam("limit") int limit) {

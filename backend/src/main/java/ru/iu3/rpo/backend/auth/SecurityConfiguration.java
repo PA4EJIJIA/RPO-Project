@@ -1,5 +1,6 @@
 package ru.iu3.rpo.backend.auth;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -57,6 +58,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authenticated()
                 .and()
                 .csrf().disable()
+                .formLogin().disable()
                 .httpBasic().disable()
                 .logout().disable()
                 .cors();
@@ -66,7 +68,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     AuthenticationFilter authenticationFilter() throws Exception {
         final AuthenticationFilter filter = new AuthenticationFilter(PROTECTED_URLS);
         filter.setAuthenticationManager(authenticationManager());
-        //filter.setAuthenticationSuccessHandler(successHandler());
         return filter;
     }
 
